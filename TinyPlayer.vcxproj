@@ -77,7 +77,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -98,12 +98,14 @@
     <QtRcc Include="tinyplayer.qrc" />
     <QtUic Include="tinyplayer.ui" />
     <QtMoc Include="tinyplayer.h" />
-    <ClCompile Include="Demux.cpp" />
+    <ClCompile Include="XDecode.cpp" />
+    <ClCompile Include="XDemux.cpp" />
     <ClCompile Include="tinyplayer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Demux.h" />
+    <ClInclude Include="XDecode.h" />
+    <ClInclude Include="XDemux.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
