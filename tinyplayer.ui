@@ -1,25 +1,39 @@
-<UI version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>TinyPlayerClass</class>
- <widget class="QWidget" name="TinyPlayerClass" >
-  <property name="objectName" >
-   <string notr="true">TinyPlayerClass</string>
-  </property>
-  <property name="geometry" >
+ <widget class="QWidget" name="TinyPlayerClass">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>400</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>TinyPlayer</string>
-  </property>$centralwidget$
+  </property>
+  <widget class="XVideoWidget" name="openGLWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>600</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>XVideoWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>XVideoWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
-   <include location="tinyplayer.qrc"/>
+  <include location="tinyplayer.qrc"/>
  </resources>
  <connections/>
-</UI>
+</ui>

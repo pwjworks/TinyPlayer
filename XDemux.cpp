@@ -54,12 +54,15 @@ bool XDemux::Open(const char* url) {
 	AVStream* vs = ic->streams[videoStream];
 	// 获取音频流
 	AVStream* as = ic->streams[audioStream];
-
+	width = vs->codecpar->width;
+	height = vs->codecpar->height;
 	std::cout << videoStream << "视频信息" << std::endl;
 	std::cout << "codec_id = " << vs->codecpar->codec_id << std::endl;
 	std::cout << "format = " << vs->codecpar->format << std::endl;
 	std::cout << "width=" << vs->codecpar->width << std::endl;
+
 	std::cout << "height=" << vs->codecpar->height << std::endl;
+
 	// 帧率fps分数转换
 	std::cout << "video fps = " << r2d(vs->avg_frame_rate) << std::endl;
 

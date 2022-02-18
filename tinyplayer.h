@@ -5,11 +5,11 @@
 
 class TinyPlayer : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    TinyPlayer(QWidget *parent = Q_NULLPTR);
+	TinyPlayer(QWidget* parent = Q_NULLPTR);
 
-private:
-    Ui::TinyPlayerClass ui;
+	//private:
+	Ui::TinyPlayerClass ui;
 };
