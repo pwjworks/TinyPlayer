@@ -2,9 +2,11 @@
 #include "XDemux.h"
 #include "XResample.h"
 #include "XDecode.h"
+#include "XAudioPlay.h"
 #include <QThread>
 #include <QtWidgets/QApplication>
 #include <iostream>
+
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -17,16 +19,18 @@ public:
 	void Init() {
 		//cout << "demux.open = " << demux.Open("test.mp4");
 
-		//demux.Clear();
-		//demux.Close();
 		cout << "demux.Open = " << demux.Open("test.mp4");
-		//cout << "CopyVPara: " << demux.CopyVPara() << endl;
-		//cout << "CopyAPara: " << demux.CopyAPara() << endl;
-		//cout << "seed = " << demux.Seek(0.5) << endl;
+		cout << "CopyVPara: " << demux.CopyVPara() << endl;
+		cout << "CopyAPara: " << demux.CopyAPara() << endl;
+		cout << "seed = " << demux.Seek(0.5) << endl;
 
 		cout << "vdecoder.Open =" << vdecoder.Open(demux.CopyVPara()) << endl;
 		cout << "adecoder.Open =" << adecoder.Open(demux.CopyAPara()) << endl;
 		resample.Open(demux.CopyAPara());
+		XAudioPlay::Get()->channels = demux.channels;
+		XAudioPlay::Get()->sampleRate = demux.sampleRate;
+		cout << "XAudioPlay::Open()" << XAudioPlay::Get()->Open() << endl;
+		cout << "=================" << endl;
 	}
 	unsigned char* pcm = new unsigned char[1024 * 1024];
 	void run() {
@@ -35,9 +39,13 @@ public:
 			if (demux.IsAudio(pkt)) {
 				adecoder.Send(pkt);
 				AVFrame* frame = adecoder.Recv();
-				resample.Resample(frame, pcm);
+				int len = resample.Resample(frame, pcm);
+				while (XAudioPlay::Get()->GetFree() >= len) {
+					XAudioPlay::Get()->Write(pcm, len);
+					msleep(1);
+				}
 
-				cout << "Resample:" << resample.Resample(frame, pcm) << " ";
+				cout << "Resample:" << len << " ";
 				//cout << "Audio: " << frame << endl;
 				//av_frame_free(&frame);
 			}

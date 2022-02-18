@@ -66,7 +66,8 @@ bool XDemux::Open(const char* url) {
 	// 帧率fps分数转换
 	std::cout << "video fps = " << r2d(vs->avg_frame_rate) << std::endl;
 
-
+	sampleRate = as->codecpar->sample_rate;
+	channels = as->codecpar->channels;
 	std::cout << audioStream << "音频信息" << std::endl;
 	std::cout << "codec_id = " << as->codecpar->codec_id << std::endl;
 	std::cout << "format = " << as->codecpar->format << std::endl;

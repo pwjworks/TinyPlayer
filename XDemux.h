@@ -37,6 +37,8 @@ public:
 
 	int width = 0;
 	int height = 0;
+	int sampleRate = 0;
+	int channels = 0;
 protected:
 	std::mutex mux_;
 	// 解封装上下文
