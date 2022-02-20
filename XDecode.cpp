@@ -11,6 +11,7 @@ void XDecode::Close() {
 		avcodec_close(codecContext);
 		avcodec_free_context(&codecContext);
 	}
+	pts = 0;
 }
 void XDecode::Clear() {
 	std::lock_guard<std::mutex> lck(mux_);
@@ -76,7 +77,9 @@ AVFrame* XDecode::Recv() {
 		av_frame_free(&frame);
 		return nullptr;
 	}
-	std::cout << "[" << frame->linesize[0] << "] " << std::flush;
+	// std::cout << "[" << frame->linesize[0] << "] " << std::flush;
+
+	pts = frame->pts;
 	return frame;
 }
 

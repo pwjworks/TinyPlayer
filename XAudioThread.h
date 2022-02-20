@@ -10,7 +10,8 @@ class AVPacket;
 class XAudioThread :public QThread
 {
 public:
-
+	// 当前音频播放的pts
+	long long pts;
 	//打开，不管成功与否都清理
 	virtual bool Open(AVCodecParameters* para, int sampleRate, int channels);
 	virtual void Push(AVPacket* pkt);

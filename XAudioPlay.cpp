@@ -6,7 +6,24 @@ using namespace std;
 
 class CXAudioPlay :public XAudioPlay {
 public:
-
+	virtual long long GetNoPlayMs() {
+		mux.lock();
+		if (!out) {
+			mux.unlock();
+			return 0;
+		}
+		long long pts = 0;
+		// 还未播放的字节数
+		double size = out->bufferSize() - out->bytesFree();
+		// 一秒字节大小
+		double secSize = sampleRate * (sampleSize / 8) * channels;
+		if (secSize <= 0)
+			pts = 0;
+		else
+			pts = (secSize / size) * 1000;
+		mux.unlock();
+		return pts;
+	}
 	virtual void Close() {
 		std::lock_guard<std::mutex> lck(mux);
 		if (out) {

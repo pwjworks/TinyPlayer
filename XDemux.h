@@ -40,7 +40,7 @@ public:
 	int sampleRate = 0;
 	int channels = 0;
 protected:
-	std::mutex mux_;
+	std::mutex mux;
 	// 解封装上下文
 	AVFormatContext* ic{};
 	int videoStream = 0;
