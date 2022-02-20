@@ -51,9 +51,7 @@ bool XDemuxThread::Open(const char* url, IVideoCall* call)
 		return false;
 
 	mux.lock();
-	if (!demux) demux = new XDemux();
-	if (!vt) vt = new XVideoThread();
-	if (!at) at = new XAudioThread();
+
 
 	//打开解封装
 	bool re = demux->Open(url);
@@ -82,11 +80,15 @@ bool XDemuxThread::Open(const char* url, IVideoCall* call)
 void XDemuxThread::Start()
 {
 	mux.lock();
+	if (!demux) demux = new XDemux();
+	if (!vt) vt = new XVideoThread();
+	if (!at) at = new XAudioThread();
 	//启动当前线程
 	QThread::start();
 	if (vt)vt->start();
 	if (at)at->start();
 	mux.unlock();
+	msleep(1);
 }
 XDemuxThread::XDemuxThread()
 {

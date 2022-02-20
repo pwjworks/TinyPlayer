@@ -4,6 +4,10 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 }
 
+void XFreePacket(AVPacket** pkt) {
+	if (pkt || (*pkt)) return;
+	av_packet_free(pkt);
+}
 
 void XDecode::Close() {
 	std::lock_guard<std::mutex> lck(mux_);

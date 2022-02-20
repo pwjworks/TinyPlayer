@@ -20,21 +20,22 @@ public:
 		if (secSize <= 0)
 			pts = 0;
 		else
-			pts = (secSize / size) * 1000;
+			pts = (size / secSize) * 1000;
 		mux.unlock();
 		return pts;
 	}
 	virtual void Close() {
 		std::lock_guard<std::mutex> lck(mux);
+		if (io) {
+			io->close();
+			io = nullptr;
+		}
 		if (out) {
 			out->stop();
 			delete out;
 			out = nullptr;
 		}
-		if (io) {
-			io->close();
-			io = nullptr;
-		}
+
 	}
 	virtual bool Open() {
 		Close();

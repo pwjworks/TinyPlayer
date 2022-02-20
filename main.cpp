@@ -119,8 +119,8 @@ int main(int argc, char* argv[])
 	//tt.video = w.ui.openGLWidget;
 	//tt.Init();
 	//tt.start();
-	XDemuxThread dt;
-	dt.Open("test.mp4", w.ui.openGLWidget);
-	dt.Start();
+	//XDemuxThread dt;
+	//dt.Open("test.mp4", w.ui.openGLWidget);
+	//dt.Start();
 	return a.exec();
 }

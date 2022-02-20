@@ -10,6 +10,9 @@ class TinyPlayer : public QWidget
 public:
 	TinyPlayer(QWidget* parent = Q_NULLPTR);
 
+public slots:
+	void OpenFile();
 	//private:
+public:
 	Ui::TinyPlayerClass ui;
 };
