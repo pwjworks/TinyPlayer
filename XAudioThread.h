@@ -15,11 +15,13 @@ public:
 	virtual bool Open(AVCodecParameters* para, int sampleRate, int channels);
 
 	//停止线程，清理资源
-	virtual void Stop();
+	virtual void Close();
 	void run();
 	XAudioThread();
 	virtual ~XAudioThread();
 
+	void SetPause(bool isPause);
+	bool isPause = false;
 protected:
 	std::mutex amux;
 	XAudioPlay* ap = 0;

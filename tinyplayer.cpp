@@ -9,6 +9,17 @@ TinyPlayer::TinyPlayer(QWidget* parent)
 	ui.setupUi(this);
 	dt.Start();
 
+	startTimer(40);
+}
+
+void TinyPlayer::timerEvent(QTimerEvent* e) {
+	if (isSliderPress)return;
+	long long total = dt.totalMs;
+	if (dt.totalMs > 0) {
+		double pos = dt.pts / (double)total;
+		int v = ui.playPos->maximum() * pos;
+		ui.playPos->setValue(v);
+	}
 }
 
 
@@ -20,4 +31,43 @@ void TinyPlayer::OpenFile() {
 		QMessageBox::information(0, "error", "open file failed!");
 		return;
 	}
+	SetPause(dt.isPause);
+}
+
+void TinyPlayer::mouseDubleClickEvent(QMouseEvent* e) {
+	if (isFullScreen())
+		this->showNormal();
+	else
+		this->showFullScreen();
+}
+
+void TinyPlayer::resizeEvent(QResizeEvent* e) {
+	ui.playPos->move(50, this->height() - 100);
+	ui.playPos->resize(this->width() - 100, ui.playPos->height());
+	ui.pushButton->move(100, this->height() - 150);
+	ui.isPlay->move(ui.pushButton->x() + ui.pushButton->width() + 10, ui.pushButton->y());
+	ui.openGLWidget->resize(this->size());
+}
+
+void TinyPlayer::PlayOrPause() {
+	bool isPause = !dt.isPause;
+	SetPause(isPause);
+	dt.SetPause(isPause);
+}
+
+void TinyPlayer::SetPause(bool isPause) {
+	if (isPause)
+		ui.isPlay->setText(QString::fromLocal8Bit("²¥ ·Å"));
+	else
+		ui.isPlay->setText(QString::fromLocal8Bit("ÔÝ Í£"));
+}
+
+void TinyPlayer::SliderPress() {
+	isSliderPress = true;
+}
+void TinyPlayer::SliderRelease() {
+	isSliderPress = false;
+}
+TinyPlayer::~TinyPlayer() {
+	dt.Close();
 }

@@ -67,6 +67,7 @@ int XResample::Resample(AVFrame* indata, unsigned char* d)
 	);
 	if (re <= 0)return re;
 	int outSize = re * indata->channels * av_get_bytes_per_sample((AVSampleFormat)outFormat);
+	av_frame_free(&indata);
 	return outSize;
 }
 XResample::XResample()

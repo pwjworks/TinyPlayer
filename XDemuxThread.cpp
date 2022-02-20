@@ -4,10 +4,24 @@
 #include "XAudioThread.h"
 #include <iostream>
 using namespace std;
+
+void XDemuxThread::SetPause(bool isPause) {
+	mux.lock();
+	this->isPause = isPause;
+	if (at) at->SetPause(isPause);
+	if (vt) vt->SetPause(isPause);
+	mux.unlock();
+}
+
 void XDemuxThread::run()
 {
 	while (!isExit)
 	{
+
+		if (isPause) {
+			msleep(5);
+			continue;
+		}
 		mux.lock();
 		if (!demux)
 		{
@@ -16,9 +30,11 @@ void XDemuxThread::run()
 			continue;
 		}
 
+
 		//音视频同步
 		if (vt && at)
 		{
+			pts = at->pts;
 			vt->synpts = at->pts;
 		}
 
@@ -40,7 +56,7 @@ void XDemuxThread::run()
 		}
 
 		mux.unlock();
-
+		msleep(1);
 	}
 }
 
@@ -72,10 +88,26 @@ bool XDemuxThread::Open(const char* url, IVideoCall* call)
 		re = false;
 		cout << "at->Open failed!" << endl;
 	}
+	totalMs = demux->totalMs;
 	mux.unlock();
 	cout << "XDemuxThread::Open " << re << endl;
 	return re;
 }
+// 关闭线程清理资源
+void XDemuxThread::Close() {
+	isExit = true;
+	wait();
+	if (vt)vt->Close();
+	if (at) at->Close();
+	mux.lock();
+	delete vt;
+	delete at;
+	vt = nullptr;
+	at = nullptr;
+	mux.unlock();
+}
+
+
 //启动所有线程
 void XDemuxThread::Start()
 {

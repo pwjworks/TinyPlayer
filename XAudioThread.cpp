@@ -5,7 +5,29 @@
 #include <iostream>
 using namespace std;
 
+void XAudioThread::SetPause(bool isPause) {
+	//amux.lock();
+	this->isPause = isPause;
+	if (ap) ap->SetPause(isPause);
+	//amux.unlock();
+}
 
+void XAudioThread::Close() {
+	XDecodeThread::Close();
+	if (res) {
+		res->Close();
+		amux.lock();
+		delete res;
+		res = nullptr;
+		amux.unlock();
+	}
+	if (ap) {
+		ap->Close();
+		amux.lock();
+		ap = nullptr;
+		amux.unlock();
+	}
+}
 
 bool XAudioThread::Open(AVCodecParameters* para, int sampleRate, int channels)
 {
@@ -43,6 +65,11 @@ void XAudioThread::run()
 	{
 		amux.lock();
 
+		if (isPause) {
+			amux.unlock();
+			msleep(5);
+			continue;
+		}
 
 		AVPacket* pkt = Pop();
 		bool re = decode->Send(pkt);
@@ -70,7 +97,7 @@ void XAudioThread::run()
 			{
 				if (size <= 0)break;
 				//»º³åÎ´²¥Íê£¬¿Õ¼ä²»¹»
-				if (ap->GetFree() < size)
+				if (ap->GetFree() < size || isPause)
 				{
 					msleep(1);
 					continue;

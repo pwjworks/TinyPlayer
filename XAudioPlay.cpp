@@ -37,6 +37,21 @@ public:
 		}
 
 	}
+	virtual void SetPause(bool isPause) {
+		mux.lock();
+		if (!out) {
+			mux.unlock();
+			return;
+		}
+		if (isPause) {
+			out->suspend();
+		}
+		else {
+			out->resume();
+		}
+		mux.unlock();
+	}
+
 	virtual bool Open() {
 		Close();
 		QAudioFormat fmt;

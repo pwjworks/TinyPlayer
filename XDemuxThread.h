@@ -14,10 +14,17 @@ public:
 	//启动所有线程
 	virtual void Start();
 
+	virtual void Close();
 	void run();
 	XDemuxThread();
 	virtual ~XDemuxThread();
 	bool isExit = false;
+
+	long long pts = 0;
+	long long totalMs = 0;
+
+	void SetPause(bool isPause);
+	bool isPause = false;
 protected:
 	std::mutex mux;
 	XDemux* demux = 0;

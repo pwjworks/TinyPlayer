@@ -2,6 +2,15 @@
 #include "XDecode.h"
 #include <iostream>
 using namespace std;
+
+
+void XVideoThread::SetPause(bool isPause) {
+	//vmux.lock();
+	this->isPause = isPause;
+	//vmux.unlock();
+}
+
+
 //打开，不管成功与否都清理
 bool XVideoThread::Open(AVCodecParameters* para, IVideoCall* call, int width, int height)
 {
@@ -36,6 +45,11 @@ void XVideoThread::run()
 	while (!isExit)
 	{
 		vmux.lock();
+		if (isPause) {
+			vmux.unlock();
+			msleep(5);
+			continue;
+		}
 		//音视频同步
 		if (synpts > 0 && synpts < decode->pts) {
 			vmux.unlock();

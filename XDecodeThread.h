@@ -24,6 +24,8 @@ public:
 	//最大队列
 	int maxList = 100;
 	bool isExit = false;
+
+
 protected:
 	std::list <AVPacket*> packs;
 	std::mutex mux;
