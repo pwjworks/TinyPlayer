@@ -10,7 +10,28 @@ void XVideoThread::SetPause(bool isPause) {
 	//vmux.unlock();
 }
 
+bool XVideoThread::RepaintPts(AVPacket* pkt, long long seekpts) {
+	vmux.lock();
+	bool re = decode->Send(pkt);
+	if (!re) {
+		vmux.unlock();
+		return true; // 结束解码
+	}
+	AVFrame* frame = decode->Recv();
+	if (!frame) {
+		vmux.unlock();
+		return false;
+	}
+	if (decode->pts >= seekpts) {
+		if (call) call->Repaint(frame);
+		vmux.unlock();
+		return true;
+	}
+	XFreeFrame(&frame);
+	vmux.unlock();
+	return false;
 
+}
 //打开，不管成功与否都清理
 bool XVideoThread::Open(AVCodecParameters* para, IVideoCall* call, int width, int height)
 {

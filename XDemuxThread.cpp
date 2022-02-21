@@ -29,23 +29,13 @@ void XDemuxThread::Seek(double pos) {
 	// 实际要显示的位置pts
 	long long seekPts = pos * demux->totalMs;
 	while (!isExit) {
-		AVPacket* pkt = demux->Read();
+		AVPacket* pkt = demux->ReadVideo();
 		if (!pkt) break;
-		if (pkt->stream_index == demux->audioStream) {
-			//是音频数据，丢弃
-			av_packet_free(&pkt);
-			continue;
-		}
-		bool re = vt->decode->Send(pkt);
-		if (!re)break;
-		AVFrame* frame = vt->decode->Recv();
-		if (!frame) continue;
-		if (frame->pts >= seekPts) {
-			this->pts = frame->pts;
-			vt->call->Repaint(frame);
+		// 如果解码到seekPts
+		if (vt->RepaintPts(pkt, seekPts)) {
+			this->pts = seekPts;
 			break;
 		}
-		av_frame_free(&frame);
 	}
 
 	mux.unlock();

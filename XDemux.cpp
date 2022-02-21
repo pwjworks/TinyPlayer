@@ -162,6 +162,19 @@ AVCodecParameters* XDemux::CopyAPara()
 	mux.unlock();
 	return pa;
 }
+
+AVPacket* XDemux::ReadVideo() {
+	AVPacket* pkt = nullptr;
+	// ·ÀÖ¹×èÈû
+	for (int i = 0; i < 20; i++) {
+		pkt = Read();
+		if (!pkt)break;
+		if (pkt->stream_index == videoStream)break;
+		av_packet_free(&pkt);
+	}
+	return pkt;
+}
+
 bool XDemux::IsAudio(AVPacket* pkt)
 {
 	if (!pkt) return false;
