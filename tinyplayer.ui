@@ -110,9 +110,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>playPos</sender>
+   <signal>sliderPressed()</signal>
+   <receiver>TinyPlayerClass</receiver>
+   <slot>SliderPress()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>140</x>
+     <y>675</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>130</x>
+     <y>720</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>playPos</sender>
+   <signal>sliderReleased()</signal>
+   <receiver>TinyPlayerClass</receiver>
+   <slot>SliderRelease()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>235</x>
+     <y>673</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>727</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>OpenFile()</slot>
   <slot>PlayOrPause()</slot>
+  <slot>SliderPress()</slot>
+  <slot>SliderRelease()</slot>
  </slots>
 </ui>

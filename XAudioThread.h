@@ -16,6 +16,7 @@ public:
 
 	//停止线程，清理资源
 	virtual void Close();
+	virtual void Clear();
 	void run();
 	XAudioThread();
 	virtual ~XAudioThread();

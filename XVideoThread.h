@@ -24,8 +24,10 @@ public:
 
 	void SetPause(bool isPause);
 	bool isPause = false;
-protected:
+
 	IVideoCall* call = 0;
+protected:
+
 	std::mutex vmux;
 
 };

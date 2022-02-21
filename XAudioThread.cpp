@@ -11,7 +11,12 @@ void XAudioThread::SetPause(bool isPause) {
 	if (ap) ap->SetPause(isPause);
 	//amux.unlock();
 }
-
+void XAudioThread::Clear() {
+	XDecodeThread::Clear();
+	amux.lock();
+	if (ap)ap->Clear();
+	amux.unlock();
+}
 void XAudioThread::Close() {
 	XDecodeThread::Close();
 	if (res) {

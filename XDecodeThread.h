@@ -22,13 +22,13 @@ public:
 	// 取出一帧数据，并出栈，如果没有返回NULL
 	virtual AVPacket* Pop();
 	//最大队列
-	int maxList = 100;
+	int maxList = 200;
 	bool isExit = false;
 
-
+	XDecode* decode = 0;
 protected:
 	std::list <AVPacket*> packs;
 	std::mutex mux;
-	XDecode* decode = 0;
+
 };
 

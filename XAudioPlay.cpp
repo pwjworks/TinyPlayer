@@ -24,6 +24,12 @@ public:
 		mux.unlock();
 		return pts;
 	}
+	virtual void Clear() {
+		std::lock_guard<std::mutex> lck(mux);
+		if (io) {
+			io->reset();
+		}
+	}
 	virtual void Close() {
 		std::lock_guard<std::mutex> lck(mux);
 		if (io) {

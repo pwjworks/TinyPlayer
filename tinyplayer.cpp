@@ -67,6 +67,9 @@ void TinyPlayer::SliderPress() {
 }
 void TinyPlayer::SliderRelease() {
 	isSliderPress = false;
+	double pos = 0.0;
+	pos = (double)ui.playPos->value() / (double)ui.playPos->maximum();
+	dt.Seek(pos);
 }
 TinyPlayer::~TinyPlayer() {
 	dt.Close();

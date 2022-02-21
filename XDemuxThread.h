@@ -15,6 +15,9 @@ public:
 	virtual void Start();
 
 	virtual void Close();
+	virtual void Clear();
+
+	virtual void Seek(double pos);
 	void run();
 	XDemuxThread();
 	virtual ~XDemuxThread();

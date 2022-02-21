@@ -18,7 +18,6 @@ void XDecodeThread::Clear() {
 	while (!packs.empty()) {
 		AVPacket* pkt = packs.front();
 		XFreePacket(&pkt);
-
 		packs.pop_front();
 	}
 	mux.unlock();
@@ -34,6 +33,7 @@ AVPacket* XDecodeThread::Pop() {
 	AVPacket* pkt = packs.front();
 	packs.pop_front();
 	mux.unlock();
+	msleep(1);
 	return pkt;
 }
 void XDecodeThread::Push(AVPacket* pkt) {
