@@ -9,11 +9,9 @@ using namespace std;
 
 void XResample::Close()
 {
-	mux.lock();
+	lock_guard<mutex> lck(mux);
 	if (actx)
 		swr_free(&actx);
-
-	mux.unlock();
 }
 
 //输出参数和输入参数一致除了采样格式，输出为S16
@@ -22,9 +20,6 @@ bool XResample::Open(AVCodecParameters* para, bool isClearPara)
 	if (!para)return false;
 	mux.lock();
 	//音频重采样 上下文初始化
-	//if(!actx)
-	//	actx = swr_alloc();
-
 	//如果actx为NULL会分配空间
 	actx = swr_alloc_set_opts(actx,
 		av_get_default_channel_layout(2),	//输出格式
@@ -46,13 +41,14 @@ bool XResample::Open(AVCodecParameters* para, bool isClearPara)
 		cout << "swr_init  failed! :" << buf << endl;
 		return false;
 	}
-	//unsigned char *pcm = NULL;
+
 	return true;
 }
 
 //返回重采样后大小,不管成功与否都释放indata空间
 int XResample::Resample(AVFrame* indata, unsigned char* d)
 {
+	// 容错
 	if (!indata) return 0;
 	if (!d)
 	{

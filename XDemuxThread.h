@@ -2,6 +2,7 @@
 #include <QThread>
 #include "IVideoCall.h"
 #include <mutex>
+#include <memory>
 class XDemux;
 class XVideoThread;
 class XAudioThread;
@@ -30,9 +31,9 @@ public:
 	bool isPause = false;
 protected:
 	std::mutex mux;
-	XDemux* demux = 0;
-	XVideoThread* vt = 0;
-	XAudioThread* at = 0;
+	std::shared_ptr<XDemux> demux;
+	std::shared_ptr<XVideoThread> vt;
+	std::shared_ptr<XAudioThread> at;
 };
 
 

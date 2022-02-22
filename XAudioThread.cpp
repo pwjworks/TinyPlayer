@@ -13,24 +13,19 @@ void XAudioThread::SetPause(bool isPause) {
 }
 void XAudioThread::Clear() {
 	XDecodeThread::Clear();
-	amux.lock();
+	lock_guard<mutex> lck(amux);
 	if (ap)ap->Clear();
-	amux.unlock();
 }
 void XAudioThread::Close() {
 	XDecodeThread::Close();
+	unique_lock<mutex> lck(amux);
 	if (res) {
 		res->Close();
-		amux.lock();
-		delete res;
-		res = nullptr;
-		amux.unlock();
+		res.reset();
 	}
 	if (ap) {
 		ap->Close();
-		amux.lock();
 		ap = nullptr;
-		amux.unlock();
 	}
 }
 
@@ -116,9 +111,8 @@ void XAudioThread::run()
 	delete pcm;
 }
 
-XAudioThread::XAudioThread()
+XAudioThread::XAudioThread() :res(make_shared<XResample>())
 {
-	if (!res) res = new XResample();
 	if (!ap) ap = XAudioPlay::Get();
 }
 

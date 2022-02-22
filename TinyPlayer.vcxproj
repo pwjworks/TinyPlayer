@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SwrContext_RAII.cpp" />
     <ClCompile Include="XAudioPlay.cpp" />
     <ClCompile Include="XAudioThread.cpp" />
     <ClCompile Include="XDecodeThread.cpp" />
@@ -113,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IVideoCall.h" />
+    <ClInclude Include="SwrContext_RAII.h" />
     <ClInclude Include="XAudioPlay.h" />
     <ClInclude Include="XAudioThread.h" />
     <ClInclude Include="XDecode.h" />

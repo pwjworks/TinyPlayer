@@ -2,6 +2,7 @@
 #include <QThread>
 #include <mutex>
 #include <list>
+#include<memory>
 #include "XDecodeThread.h"
 struct AVCodecParameters;
 class XAudioPlay;
@@ -25,7 +26,8 @@ public:
 	bool isPause = false;
 protected:
 	std::mutex amux;
+	std::shared_ptr<XResample> res;
 	XAudioPlay* ap = 0;
-	XResample* res = 0;
+	//XResample* res = 0;
 
 };

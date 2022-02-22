@@ -2,21 +2,22 @@
 #include <QFileDialog>
 #include "XDemuxThread.h"
 #include <QMessageBox>
-static XDemuxThread dt;
+
+std::shared_ptr<XDemuxThread> dt = std::make_shared<XDemuxThread>();
+
 TinyPlayer::TinyPlayer(QWidget* parent)
 	: QWidget(parent)
 {
+	dt->Start();
 	ui.setupUi(this);
-	dt.Start();
-
 	startTimer(40);
 }
 
 void TinyPlayer::timerEvent(QTimerEvent* e) {
 	if (isSliderPress)return;
-	long long total = dt.totalMs;
-	if (dt.totalMs > 0) {
-		double pos = dt.pts / (double)total;
+	long long total = dt->totalMs;
+	if (dt->totalMs > 0) {
+		double pos = dt->pts / (double)total;
 		int v = ui.playPos->maximum() * pos;
 		ui.playPos->setValue(v);
 	}
@@ -24,14 +25,15 @@ void TinyPlayer::timerEvent(QTimerEvent* e) {
 
 
 void TinyPlayer::OpenFile() {
+	dt->Start();
 	QString name = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择视频文件"));
 	if (name.isEmpty()) return;
 	this->setWindowTitle(name);
-	if (!dt.Open(name.toLocal8Bit(), ui.openGLWidget)) {
+	if (!dt->Open(name.toLocal8Bit(), ui.openGLWidget)) {
 		QMessageBox::information(0, "error", "open file failed!");
 		return;
 	}
-	SetPause(dt.isPause);
+	SetPause(dt->isPause);
 }
 
 void TinyPlayer::mouseDubleClickEvent(QMouseEvent* e) {
@@ -50,9 +52,9 @@ void TinyPlayer::resizeEvent(QResizeEvent* e) {
 }
 
 void TinyPlayer::PlayOrPause() {
-	bool isPause = !dt.isPause;
+	bool isPause = !dt->isPause;
 	SetPause(isPause);
-	dt.SetPause(isPause);
+	dt->SetPause(isPause);
 }
 
 void TinyPlayer::SetPause(bool isPause) {
@@ -69,8 +71,9 @@ void TinyPlayer::SliderRelease() {
 	isSliderPress = false;
 	double pos = 0.0;
 	pos = (double)ui.playPos->value() / (double)ui.playPos->maximum();
-	dt.Seek(pos);
+	dt->Seek(pos);
 }
 TinyPlayer::~TinyPlayer() {
-	dt.Close();
+	dt->Close();
+	dt.reset();
 }

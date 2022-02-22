@@ -1,8 +1,10 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+#include <memory>
 #include "ui_tinyplayer.h"
 
+class XDemuxThread;
 class TinyPlayer : public QWidget
 {
 	Q_OBJECT

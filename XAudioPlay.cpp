@@ -7,9 +7,8 @@ using namespace std;
 class CXAudioPlay :public XAudioPlay {
 public:
 	virtual long long GetNoPlayMs() {
-		mux.lock();
+		std::lock_guard<std::mutex> lck(mux);
 		if (!out) {
-			mux.unlock();
 			return 0;
 		}
 		long long pts = 0;
@@ -21,7 +20,6 @@ public:
 			pts = 0;
 		else
 			pts = (size / secSize) * 1000;
-		mux.unlock();
 		return pts;
 	}
 	virtual void Clear() {
@@ -44,9 +42,8 @@ public:
 
 	}
 	virtual void SetPause(bool isPause) {
-		mux.lock();
+		std::lock_guard<std::mutex> lck(mux);
 		if (!out) {
-			mux.unlock();
 			return;
 		}
 		if (isPause) {
@@ -55,7 +52,6 @@ public:
 		else {
 			out->resume();
 		}
-		mux.unlock();
 	}
 
 	virtual bool Open() {
