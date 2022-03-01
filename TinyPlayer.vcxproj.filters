@@ -70,7 +70,7 @@
     <ClCompile Include="XSlider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SwrContext_RAII.cpp">
+    <ClCompile Include="XDemuxThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -102,7 +102,7 @@
     <ClInclude Include="XDecodeThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SwrContext_RAII.h">
+    <ClInclude Include="XDemuxThreadPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

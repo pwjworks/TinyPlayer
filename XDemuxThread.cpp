@@ -64,38 +64,32 @@ void XDemuxThread::run()
 			continue;
 		}
 
-		if (!demux)
-		{
+		if (!demux) {
 			lck.unlock();
 			msleep(5);
 			continue;
 		}
 
 		//音视频同步
-		if (vt && at)
-		{
+		if (vt && at) {
 			pts = at->pts;
 			vt->synpts = at->pts;
 		}
 
 		// 解封装音视频
 		AVPacket* pkt = demux->Read();
-		if (!pkt)
-		{
+		if (!pkt) {
 			lck.unlock();
 			msleep(5);
 			continue;
 		}
 		//判断数据是音频
-		if (demux->IsAudio(pkt))
-		{
+		if (demux->IsAudio(pkt)) {
 			if (at)at->Push(pkt);
 		}
-		else //视频
-		{
-			if (vt)vt->Push(pkt);
+		else {
+			if (vt)vt->Push(pkt);//视频
 		}
-
 		lck.unlock();
 		msleep(1);
 	}
@@ -111,20 +105,17 @@ bool XDemuxThread::Open(const char* url, IVideoCall* call)
 
 	//打开解封装
 	bool re = demux->Open(url);
-	if (!re)
-	{
+	if (!re) {
 		cout << "demux->Open(url) failed!" << endl;
 		return false;
 	}
 	//打开视频解码器和处理线程
-	if (!vt->Open(demux->CopyVPara(), call, demux->width, demux->height))
-	{
+	if (!vt->Open(demux->CopyVPara(), call, demux->width, demux->height)) {
 		re = false;
 		cout << "vt->Open failed!" << endl;
 	}
 	//打开音频解码器和处理线程
-	if (!at->Open(demux->CopyAPara(), demux->sampleRate, demux->channels))
-	{
+	if (!at->Open(demux->CopyAPara(), demux->sampleRate, demux->channels)) {
 		re = false;
 		cout << "at->Open failed!" << endl;
 	}

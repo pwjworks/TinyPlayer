@@ -32,7 +32,7 @@ void XAudioThread::Close() {
 bool XAudioThread::Open(AVCodecParameters* para, int sampleRate, int channels)
 {
 	if (!para)return false;
-	amux.lock();
+	unique_lock<mutex> lck(amux);
 	pts = 0;
 
 	bool re = true;
@@ -53,7 +53,7 @@ bool XAudioThread::Open(AVCodecParameters* para, int sampleRate, int channels)
 		cout << "audio XDecode open failed!" << endl;
 		re = false;
 	}
-	amux.unlock();
+	lck.unlock();
 	cout << "XAudioThread::Open :" << re << endl;
 	return re;
 }
@@ -63,10 +63,10 @@ void XAudioThread::run()
 	unsigned char* pcm = new unsigned char[1024 * 1024 * 10];
 	while (!isExit)
 	{
-		amux.lock();
+		unique_lock<mutex> lck(amux);
 
 		if (isPause) {
-			amux.unlock();
+			lck.unlock();
 			msleep(5);
 			continue;
 		}
@@ -75,7 +75,7 @@ void XAudioThread::run()
 		bool re = decode->Send(pkt);
 		if (!re)
 		{
-			amux.unlock();
+			lck.unlock();
 			msleep(1);
 			continue;
 		}
@@ -106,7 +106,7 @@ void XAudioThread::run()
 				break;
 			}
 		}
-		amux.unlock();
+		lck.unlock();
 	}
 	delete pcm;
 }
