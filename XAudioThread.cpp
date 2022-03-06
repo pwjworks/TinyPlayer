@@ -2,6 +2,7 @@
 #include "XDecode.h"
 #include "XAudioPlay.h"
 #include "XResample.h"
+#include "AVFrameRAII.h"
 #include <iostream>
 using namespace std;
 
@@ -82,7 +83,7 @@ void XAudioThread::run()
 		//一次send 多次recv
 		while (!isExit)
 		{
-			AVFrame* frame = decode->Recv();
+			shared_ptr<AVFrameRAII> frame = decode->Recv();
 			if (!frame) break;
 
 			//减去缓冲中未播放的时间
@@ -92,6 +93,7 @@ void XAudioThread::run()
 
 			//重采样 
 			int size = res->Resample(frame, pcm);
+
 			//播放音频
 			while (!isExit)
 			{

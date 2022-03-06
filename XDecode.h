@@ -1,10 +1,13 @@
 #pragma once
 #include<mutex>
+#include <memory>
 
 struct AVCodecParameters;
 struct AVCodecContext;
 struct AVFrame;
 struct AVPacket;
+
+class AVFrameRAII;
 
 extern void XFreePacket(AVPacket** pkt);
 extern void XFreeFrame(AVFrame** frame);
@@ -20,7 +23,7 @@ public:
 
 	//获取解码数据，一次send可能需要多次Recv，获取缓冲中的数据Send NULL在Recv多次
 	//每次复制一份，由调用者释放 av_frame_free
-	virtual AVFrame* Recv();
+	virtual std::shared_ptr<AVFrameRAII> Recv();
 
 	virtual void Close();
 	virtual void Clear();

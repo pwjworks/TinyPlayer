@@ -73,6 +73,9 @@
     <ClCompile Include="XDemuxThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AVFrameRAII.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XDemux.h">
@@ -103,6 +106,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XDemuxThreadPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AVFrameRAII.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

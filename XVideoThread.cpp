@@ -1,5 +1,6 @@
 #include "XVideoThread.h"
 #include "XDecode.h"
+#include "AVFrameRAII.h"
 #include <iostream>
 using namespace std;
 
@@ -16,7 +17,7 @@ bool XVideoThread::RepaintPts(AVPacket* pkt, long long seekpts) {
 	if (!re) {
 		return true; // 结束解码
 	}
-	AVFrame* frame = decode->Recv();
+	shared_ptr<AVFrameRAII> frame = decode->Recv();
 	if (!frame) {
 		return false;
 	}
@@ -24,7 +25,6 @@ bool XVideoThread::RepaintPts(AVPacket* pkt, long long seekpts) {
 		if (call) call->Repaint(frame);
 		return true;
 	}
-	XFreeFrame(&frame);
 	return false;
 
 }
@@ -94,14 +94,13 @@ void XVideoThread::run()
 		}
 		//一次send 多次recv
 		while (!isExit) {
-			AVFrame* frame = decode->Recv();
+			shared_ptr<AVFrameRAII> frame = decode->Recv();
 			if (!frame) break;
 			//显示视频
 			if (call)
 			{
 				call->Repaint(frame);
 			}
-
 		}
 		lck.unlock();
 	}

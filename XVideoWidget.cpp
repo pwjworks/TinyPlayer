@@ -1,9 +1,14 @@
 #include "XVideoWidget.h"
+#include "AVFrameRAII.h"
 #include <QDebug>
 #include <QTimer>
+
 extern "C" {
 #include<libavutil/frame.h>
 }
+
+using namespace std;
+
 //自动加双引号
 #define GET_STR(x) #x
 #define A_VER 3
@@ -45,12 +50,12 @@ void main(void)
 
 );
 
-void XVideoWidget::Repaint(AVFrame* frame) {
+void XVideoWidget::Repaint(shared_ptr<AVFrameRAII> frame_raii) {
 	// 行对齐
 	{
 		std::lock_guard<std::mutex> lck(mux);
+		AVFrame* frame = frame_raii->get_frame();
 		if (!datas[0] || !frame || frame->width != this->width || frame->height != this->height) {
-			av_frame_free(&frame);
 			return;
 		}
 		if (width == frame->linesize[0]) {
@@ -66,13 +71,9 @@ void XVideoWidget::Repaint(AVFrame* frame) {
 			for (int i = 0; i < height / 2; i++)
 				memcpy(datas[2] + width / 2 * i, frame->data[2] + frame->linesize[2] * i, width);
 		}
-
-
-
 	}
 	// 刷新显示
 	update();
-	av_frame_free(&frame);
 }
 
 //准备yuv数据

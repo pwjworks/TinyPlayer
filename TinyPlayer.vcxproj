@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AVFrameRAII.cpp" />
     <ClCompile Include="XAudioPlay.cpp" />
     <ClCompile Include="XAudioThread.cpp" />
     <ClCompile Include="XDecodeThread.cpp" />
@@ -113,6 +114,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AVFrameRAII.h" />
     <ClInclude Include="IVideoCall.h" />
     <ClInclude Include="XAudioPlay.h" />
     <ClInclude Include="XAudioThread.h" />

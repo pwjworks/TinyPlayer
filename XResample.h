@@ -1,10 +1,13 @@
 #pragma once
 
 #include <mutex>
+#include <memory>
 
 struct AVCodecParameters;
 struct AVFrame;
 struct SwrContext;
+
+class AVFrameRAII;
 
 class XResample
 {
@@ -15,7 +18,7 @@ public:
 	virtual void Close();
 
 	//返回重采样后大小,不管成功与否都释放indata空间
-	virtual int Resample(AVFrame* indata, unsigned char* data);
+	virtual int Resample(std::shared_ptr<AVFrameRAII> indata, unsigned char* data);
 	XResample();
 	~XResample();
 

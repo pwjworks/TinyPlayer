@@ -4,15 +4,17 @@
 #include <QOpenGLFunctions>
 #include <QGLShaderProgram>
 #include <mutex>
+#include <memory>
 #include "IVideoCall.h"
 struct AVFrame;
+class AVFrameRAII;
 class XVideoWidget : public QOpenGLWidget, protected QOpenGLFunctions, public IVideoCall
 {
 	Q_OBJECT
 
 public:
 	void Init(int width, int height);
-	virtual void Repaint(AVFrame* frame);
+	virtual void Repaint(std::shared_ptr<AVFrameRAII> frame);
 	XVideoWidget(QWidget* parent);
 	~XVideoWidget();
 protected:
