@@ -17,7 +17,6 @@ void XDecodeThread::Clear() {
 	lock_guard<mutex> lck(mux);
 	decode->Clear();
 	while (!packs.empty()) {
-		shared_ptr<AVPacketRAII> pkt = packs.front();
 		packs.pop_front();
 	}
 }
@@ -41,7 +40,6 @@ void XDecodeThread::Push(shared_ptr<AVPacketRAII> pkt) {
 		unique_lock<mutex> lck(mux);
 		if (packs.size() < maxList) {
 			packs.emplace_back(pkt);
-			lck.unlock();
 			break;
 		}
 		lck.unlock();

@@ -3,7 +3,7 @@
 #include "XDemuxThread.h"
 #include <QMessageBox>
 
-std::shared_ptr<XDemuxThread> dt = std::make_shared<XDemuxThread>();
+static std::shared_ptr<XDemuxThread> dt = std::make_shared<XDemuxThread>();
 
 TinyPlayer::TinyPlayer(QWidget* parent)
 	: QWidget(parent)

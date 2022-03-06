@@ -101,7 +101,6 @@
     <ClCompile Include="XAudioThread.cpp" />
     <ClCompile Include="XDecodeThread.cpp" />
     <ClCompile Include="XDemuxThread.cpp" />
-    <ClCompile Include="XDemuxThreadPool.cpp" />
     <ClCompile Include="XResample.cpp" />
     <ClCompile Include="XSlider.cpp" />
     <ClCompile Include="XVideoThread.cpp" />
@@ -124,7 +123,6 @@
     <ClInclude Include="XDecodeThread.h" />
     <ClInclude Include="XDemux.h" />
     <ClInclude Include="XDemuxThread.h" />
-    <ClInclude Include="XDemuxThreadPool.h" />
     <ClInclude Include="XResample.h" />
     <QtMoc Include="XSlider.h" />
     <ClInclude Include="XVideoThread.h" />

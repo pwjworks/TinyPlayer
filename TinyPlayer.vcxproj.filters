@@ -70,9 +70,6 @@
     <ClCompile Include="XSlider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XDemuxThreadPool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AVFrameRAII.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -106,9 +103,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XDecodeThread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XDemuxThreadPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AVFrameRAII.h">

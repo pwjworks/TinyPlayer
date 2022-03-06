@@ -181,13 +181,13 @@ shared_ptr<AVPacketRAII> XDemux::Read()
 	int re = av_read_frame(ic, pkt->get_avpacket());
 	if (re != 0)
 	{
-		lck.unlock();
 		return 0;
 	}
+	lck.unlock();
 	//pts×ª»»ÎªºÁÃë
 	pkt->get_avpacket()->pts = pkt->get_avpacket()->pts * (1000 * (r2d(ic->streams[pkt->get_avpacket()->stream_index]->time_base)));
 	pkt->get_avpacket()->dts = pkt->get_avpacket()->dts * (1000 * (r2d(ic->streams[pkt->get_avpacket()->stream_index]->time_base)));
-	cout << pkt->get_avpacket()->pts << " " << flush;
+	// cout << pkt->get_avpacket()->pts << " " << flush;
 	return pkt;
 
 }
