@@ -1,5 +1,6 @@
 #include "XDecodeThread.h"
 #include "XDecode.h"
+#include "AVPacketRAII.h"
 
 using namespace std;
 void XDecodeThread::Close() {
@@ -16,26 +17,25 @@ void XDecodeThread::Clear() {
 	lock_guard<mutex> lck(mux);
 	decode->Clear();
 	while (!packs.empty()) {
-		AVPacket* pkt = packs.front();
-		XFreePacket(&pkt);
+		shared_ptr<AVPacketRAII> pkt = packs.front();
 		packs.pop_front();
 	}
 }
 
 
-AVPacket* XDecodeThread::Pop() {
+shared_ptr<AVPacketRAII> XDecodeThread::Pop() {
 
 	unique_lock<mutex> lck(mux);
 	if (packs.empty()) {
 		return nullptr;
 	}
-	AVPacket* pkt = packs.front();
+	shared_ptr<AVPacketRAII> pkt = packs.front();
 	packs.pop_front();
 	lck.unlock();
 	msleep(1);
 	return pkt;
 }
-void XDecodeThread::Push(AVPacket* pkt) {
+void XDecodeThread::Push(shared_ptr<AVPacketRAII> pkt) {
 	if (!pkt) return;
 	while (!isExit) {
 		unique_lock<mutex> lck(mux);

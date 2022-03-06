@@ -1,4 +1,5 @@
 #include "XDemux.h"
+#include "AVPacketRAII.h"
 #include <iostream>
 using namespace std;
 extern "C" {
@@ -148,47 +149,45 @@ AVCodecParameters* XDemux::CopyAPara()
 	return pa;
 }
 
-AVPacket* XDemux::ReadVideo() {
-	AVPacket* pkt = nullptr;
+shared_ptr<AVPacketRAII> XDemux::ReadVideo() {
+	shared_ptr<AVPacketRAII> pkt;
 	// 防止阻塞
 	for (int i = 0; i < 20; i++) {
 		pkt = Read();
 		if (!pkt)break;
-		if (pkt->stream_index == videoStream)break;
-		av_packet_free(&pkt);
+		if (pkt->get_avpacket()->stream_index == videoStream) break;
 	}
 	return pkt;
 }
 
-bool XDemux::IsAudio(AVPacket* pkt)
+bool XDemux::IsAudio(shared_ptr<AVPacketRAII> pkt)
 {
 	if (!pkt) return false;
-	if (pkt->stream_index == videoStream)
+	if (pkt->get_avpacket()->stream_index == videoStream)
 		return false;
 	return true;
 
 }
 //空间需要调用者释放 ，释放AVPacket对象空间，和数据空间 av_packet_free
-AVPacket* XDemux::Read()
+shared_ptr<AVPacketRAII> XDemux::Read()
 {
 	std::unique_lock<mutex> lck(mux);
 	if (!ic) //容错
 	{
 		return 0;
 	}
-	AVPacket* pkt = av_packet_alloc();
+	shared_ptr<AVPacketRAII> pkt = make_shared<AVPacketRAII>();
 	//读取一帧，并分配空间
-	int re = av_read_frame(ic, pkt);
+	int re = av_read_frame(ic, pkt->get_avpacket());
 	if (re != 0)
 	{
 		lck.unlock();
-		av_packet_free(&pkt);
 		return 0;
 	}
 	//pts转换为毫秒
-	pkt->pts = pkt->pts * (1000 * (r2d(ic->streams[pkt->stream_index]->time_base)));
-	pkt->dts = pkt->dts * (1000 * (r2d(ic->streams[pkt->stream_index]->time_base)));
-	cout << pkt->pts << " " << flush;
+	pkt->get_avpacket()->pts = pkt->get_avpacket()->pts * (1000 * (r2d(ic->streams[pkt->get_avpacket()->stream_index]->time_base)));
+	pkt->get_avpacket()->dts = pkt->get_avpacket()->dts * (1000 * (r2d(ic->streams[pkt->get_avpacket()->stream_index]->time_base)));
+	cout << pkt->get_avpacket()->pts << " " << flush;
 	return pkt;
 
 }

@@ -11,7 +11,7 @@ void XVideoThread::SetPause(bool isPause) {
 	//vmux.unlock();
 }
 
-bool XVideoThread::RepaintPts(AVPacket* pkt, long long seekpts) {
+bool XVideoThread::RepaintPts(shared_ptr<AVPacketRAII> pkt, long long seekpts) {
 	lock_guard<mutex> lck(vmux);
 	bool re = decode->Send(pkt);
 	if (!re) {
@@ -73,7 +73,7 @@ void XVideoThread::run()
 			msleep(1);
 			continue;
 		}
-		AVPacket* pkt = Pop();
+		shared_ptr<AVPacketRAII> pkt = Pop();
 
 		////没有数据
 		//if (packs.empty() || !decode) {

@@ -72,7 +72,7 @@ void XAudioThread::run()
 			continue;
 		}
 
-		AVPacket* pkt = Pop();
+		shared_ptr<AVPacketRAII> pkt = Pop();
 		bool re = decode->Send(pkt);
 		if (!re)
 		{

@@ -76,6 +76,9 @@
     <ClCompile Include="AVFrameRAII.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AVPacketRAII.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XDemux.h">
@@ -109,6 +112,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AVFrameRAII.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AVPacketRAII.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

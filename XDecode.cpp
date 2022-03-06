@@ -1,20 +1,11 @@
 #include "XDecode.h"
 #include "AVFrameRAII.h"
+#include "AVPacketRAII.h"
 #include<iostream>
 extern "C" {
 #include <libavcodec/avcodec.h>
 }
 using namespace std;
-
-void XFreePacket(AVPacket** pkt) {
-	if (!pkt || !(*pkt)) return;
-	av_packet_free(pkt);
-}
-
-void XFreeFrame(AVFrame** frame) {
-	if (!frame || !(*frame)) return;
-	av_frame_free(frame);
-}
 
 void XDecode::Close() {
 	std::lock_guard<std::mutex> lck(mux_);
@@ -66,14 +57,13 @@ bool XDecode::Open(AVCodecParameters* para) {
 	return true;
 }
 
-bool XDecode::Send(AVPacket* pkt) {
-	if (!pkt || pkt->size <= 0 || !pkt->data) return false;
+bool XDecode::Send(shared_ptr<AVPacketRAII> pkt) {
+	if (!pkt || pkt->get_avpacket()->size <= 0 || !pkt->get_avpacket()->data) return false;
 	{
 		std::lock_guard<std::mutex> lck(mux_);
 		if (!codecContext) return false;
-		int ret = avcodec_send_packet(codecContext, pkt);
+		int ret = avcodec_send_packet(codecContext, pkt->get_avpacket());
 		//  Õ∑≈ø’º‰
-		av_packet_free(&pkt);
 		if (ret != 0)return false;
 	}
 	return true;

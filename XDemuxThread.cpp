@@ -30,7 +30,7 @@ void XDemuxThread::Seek(double pos) {
 		// 实际要显示的位置pts
 		long long seekPts = pos * demux->totalMs;
 		while (!isExit) {
-			AVPacket* pkt = demux->ReadVideo();
+			shared_ptr<AVPacketRAII> pkt = demux->ReadVideo();
 			if (!pkt) break;
 			// 如果解码到seekPts
 			if (vt->RepaintPts(pkt, seekPts)) {
@@ -77,7 +77,7 @@ void XDemuxThread::run()
 		}
 
 		// 解封装音视频
-		AVPacket* pkt = demux->Read();
+		shared_ptr<AVPacketRAII> pkt = demux->Read();
 		if (!pkt) {
 			lck.unlock();
 			msleep(5);
